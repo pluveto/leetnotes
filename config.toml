@@ -1,0 +1,6 @@
+baseURL = 'http://leetnodes.ry.rs/'
+languageCode = 'zh-CN'
+title = "Zijing's Leetcode Notes"
+theme = "hugo-book"
+[markup.goldmark.renderer]
+unsafe= true
