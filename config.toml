@@ -2,10 +2,23 @@ baseURL = 'https://leetnodes.ry.rs/'
 languageCode = 'zh-CN'
 title = "Zijing's Leetcode Notes"
 theme = "hugo-book"
+disablePathToLower = true
 enableGitInfo = true
 
+[markup]
 [markup.goldmark.renderer]
-unsafe= true
+  unsafe = true
+
+[markup.tableOfContents]
+  startLevel = 1
+
+[menu]
+# [[menu.before]]
+[[menu.after]]
+  name = "Github"
+  url = "https://github.com/pluveto/leetnotes"
+  pre = '<hr style="border: 0; border-bottom: 1px solid #eee" /><img src="github.svg" width=16 />'
+  weight = 10
 
 [params]
   BookTheme = 'auto'
