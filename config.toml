@@ -1,4 +1,4 @@
-baseURL = 'http://leetnodes.ry.rs/'
+baseURL = 'https://leetnodes.ry.rs/'
 languageCode = 'zh-CN'
 title = "Zijing's Leetcode Notes"
 theme = "hugo-book"
