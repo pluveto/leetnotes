@@ -17,7 +17,7 @@ enableGitInfo = true
 [[menu.after]]
   name = "Github"
   url = "https://github.com/pluveto/leetnotes"
-  pre = '<hr style="border: 0; border-bottom: 1px solid #eee" /><img src="github.svg" width=16 />'
+  pre = '<hr style="border: 0; border-bottom: 1px solid #eee" /><img src="/github.svg" width=16 />'
   weight = 10
 
 [params]
