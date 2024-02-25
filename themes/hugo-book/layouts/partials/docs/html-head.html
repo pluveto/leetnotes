@@ -1,0 +1,152 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="{{ default .Summary .Description }}">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#343a40">
+<meta name="color-scheme" content="light dark">
+
+{{- with .Page.Params.BookHref -}}
+  <meta http-equiv="Refresh" content="0; url='{{ . }}'" />
+{{- end -}}
+
+{{- template "_internal/opengraph.html" . -}}
+
+<title>{{ partial "docs/html-head-title" . }}</title>
+
+{{- $manifest := resources.Get "manifest.json" | resources.ExecuteAsTemplate "manifest.json" . }}
+<link rel="manifest" href="{{ $manifest.RelPermalink }}">
+<link rel="icon" href="{{ .Site.Params.BookFavicon | default "favicon.png" | relURL }}" >
+<link rel="canonical" href="{{ .Permalink }}">
+
+{{- range .Translations }}
+  <link rel="alternate" hreflang="{{ default .Language.Lang .Site.LanguageCode }}" href="{{ .Permalink }}" title="{{ partial "docs/title" . }}">
+{{- end -}}
+
+<!-- Theme stylesheet, you can customize scss by creating `assets/custom.scss` in your website -->
+{{- $styles := resources.Get "book.scss" | resources.ExecuteAsTemplate "book.scss" . | resources.ToCSS | resources.Minify | resources.Fingerprint }}
+<link rel="stylesheet" href="{{ $styles.RelPermalink }}" {{ template "integrity" $styles }}>
+
+{{- if default true .Site.Params.BookSearch -}}
+  {{- $searchJSFile := printf "%s.search.js" .Language.Lang }}
+  {{- $searchJS := resources.Get "search.js" | resources.ExecuteAsTemplate $searchJSFile . | resources.Minify | resources.Fingerprint }}
+  <script defer src="{{ "flexsearch.min.js" | relURL }}"></script>
+  <script defer src="{{ $searchJS.RelPermalink }}" {{ template "integrity" $searchJS }}></script>
+{{ end -}}
+
+{{- if .Site.Params.BookServiceWorker -}}
+  {{- $swJS := resources.Get "sw-register.js" | resources.ExecuteAsTemplate "sw.js" . | resources.Minify | resources.Fingerprint }}
+  <script defer src="{{ $swJS.RelPermalink }}" {{ template "integrity" $swJS }}></script>
+{{ end -}}
+
+{{- template "_internal/google_analytics.html" . -}}
+
+<!-- RSS -->
+{{- with .OutputFormats.Get "rss" -}}
+  {{ printf `<link rel="%s" type="%s" href="%s" title="%s" />` .Rel .MediaType.Type .Permalink $.Site.Title | safeHTML }}
+{{ end -}}
+
+{{ "<!--" | safeHTML }}
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+{{ "-->" | safeHTML }}
+
+{{- define "integrity" -}}
+  {{- if (urls.Parse .Permalink).Host -}}
+    integrity="{{ .Data.Integrity }}" crossorigin="anonymous"
+  {{- end -}}
+{{- end -}}
+
+
+<style>
+  .slideshow-container {
+    position: relative;
+    max-width: 600px; /* Adjust based on your needs */
+    margin: auto;
+    overflow: hidden;
+  }
+  .slide {
+    display: none;
+  }
+  .active-slide {
+    display: block;
+  }
+  .prev, .next {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: auto;
+    padding: 16px;
+    color: #ccc;
+    font-weight: bold;
+    font-size: 18px;
+    transition: 0.6s ease;
+    border-radius: 0 3px 3px 0;
+    user-select: none;
+  }
+  .next {
+    right: 0;
+    border-radius: 3px 0 0 3px;
+  }
+  .prev {
+    left: 0;
+    border-radius: 3px 0 0 3px;
+  }
+</style>
+
+<script>
+  class Slides {
+    constructor(imgUrls, parent) {
+      this.imgUrls = imgUrls;
+      this.currentIndex = 0;
+      this.container = document.querySelector(parent);
+      this.render();
+      this.showSlides(this.currentIndex);
+    }
+
+    render() {
+      const slideshowContainer = document.createElement('div');
+      slideshowContainer.className = 'slideshow-container';
+
+      this.imgUrls.forEach((url, index) => {
+        const slide = document.createElement('div');
+        slide.className = 'slide';
+        const img = document.createElement('img');
+        img.src = url;
+        img.style.width = '100%';
+        slide.appendChild(img);
+        slideshowContainer.appendChild(slide);
+      });
+
+      const prevButton = document.createElement('a');
+      prevButton.innerHTML = '&#10094;';
+      prevButton.className = 'prev';
+      prevButton.onclick = () => this.changeSlide(-1);
+
+      const nextButton = document.createElement('a');
+      nextButton.innerHTML = '&#10095;';
+      nextButton.className = 'next';
+      nextButton.onclick = () => this.changeSlide(1);
+
+      slideshowContainer.appendChild(prevButton);
+      slideshowContainer.appendChild(nextButton);
+
+      this.container.appendChild(slideshowContainer);
+    }
+
+    showSlides(n) {
+      let i;
+      const slides = document.getElementsByClassName('slide');
+      if (n >= slides.length) { this.currentIndex = 0; }
+      if (n < 0) { this.currentIndex = slides.length - 1; }
+      for (i = 0; i < slides.length; i++) {
+        slides[i].style.display = "none";
+      }
+      slides[this.currentIndex].style.display = "block";
+    }
+
+    changeSlide(n) {
+      this.showSlides(this.currentIndex += n);
+    }
+  }
+</script>
