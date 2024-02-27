@@ -1,5 +1,6 @@
 ---
 bookFlatSection: true
+weight: 2
 ---
 
 # Part 2 链表

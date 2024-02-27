@@ -1,6 +1,4 @@
 ---
 bookFlatSection: true
-weight: 6
+weight: 4
 ---
-
-# Part 6 字典

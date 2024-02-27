@@ -1,5 +1,6 @@
 ---
 bookFlatSection: true
+weight: 0
 ---
 
 # Part 0 可复用思路

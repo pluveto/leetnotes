@@ -1,5 +1,6 @@
 ---
 bookFlatSection: true
+weight: 1
 ---
 
 # Part 1 排序类
